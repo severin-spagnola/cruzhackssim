@@ -20,7 +20,7 @@ const numberUpdate = (fn: (value: number) => void) => (event: ChangeEvent<HTMLIn
 }
 
 export default function ScenarioPanel({ scenario, loading, onUpdate, onGenerate, onReset }: Props) {
-  const objectiveSlider = Math.round((1 - scenario.healthWeight) * 100)
+const objectiveSlider = scenario.objectiveWeight
 
   return (
     <section className="glass-panel" aria-label="Scenario setup">
@@ -50,7 +50,9 @@ export default function ScenarioPanel({ scenario, loading, onUpdate, onGenerate,
           <select
             id="horizon"
             value={scenario.horizonDays}
-            onChange={(event) => onUpdate({ horizonDays: Number(event.target.value) })}
+            onChange={(event) =>
+              onUpdate({ horizonDays: Number(event.target.value) as ScenarioConfig['horizonDays'] })
+            }
           >
             {horizons.map((days) => (
               <option key={days} value={days}>
@@ -61,31 +63,31 @@ export default function ScenarioPanel({ scenario, loading, onUpdate, onGenerate,
         </div>
 
         <div className="control-group">
-          <label htmlFor="initialCases">Initial cases</label>
+          <label htmlFor="initialEvents">Initial events</label>
           <input
-            id="initialCases"
+            id="initialEvents"
             type="range"
             min={10}
             max={400}
             step={5}
-            value={scenario.initialCases}
-            onChange={numberUpdate((value) => onUpdate({ initialCases: value }))}
+            value={scenario.initialEvents}
+            onChange={numberUpdate((value) => onUpdate({ initialEvents: value }))}
           />
-          <span className="range-value">{scenario.initialCases} active cases on day 0</span>
+          <span className="range-value">{scenario.initialEvents} initial stress points</span>
         </div>
 
         <div className="control-group">
-          <label htmlFor="spread">Spread multiplier</label>
+          <label htmlFor="intensity">Intensity slider</label>
           <input
-            id="spread"
+            id="intensity"
             type="range"
-            min={0.8}
-            max={2.2}
-            step={0.05}
-            value={scenario.spread}
-            onChange={numberUpdate((value) => onUpdate({ spread: value }))}
+            min={0}
+            max={100}
+            step={5}
+            value={scenario.intensity}
+            onChange={numberUpdate((value) => onUpdate({ intensity: value }))}
           />
-          <span className="range-value">×{scenario.spread.toFixed(2)} transmission rate</span>
+          <span className="range-value">{scenario.intensity}% system intensity</span>
         </div>
 
         <div className="control-group">
@@ -93,17 +95,17 @@ export default function ScenarioPanel({ scenario, loading, onUpdate, onGenerate,
           <input
             id="compliance"
             type="range"
-            min={0.4}
-            max={0.95}
-            step={0.05}
+            min={0}
+            max={100}
+            step={5}
             value={scenario.compliance}
             onChange={numberUpdate((value) => onUpdate({ compliance: value }))}
           />
-          <span className="range-value">{(scenario.compliance * 100).toFixed(0)}% population complying</span>
+          <span className="range-value">{scenario.compliance}% adherence to guidance</span>
         </div>
 
         <div className="control-group">
-          <label htmlFor="objective">Objective: Health vs Economy</label>
+          <label htmlFor="objective">Objective: Resilience vs Disruption</label>
           <input
             id="objective"
             type="range"
@@ -111,14 +113,14 @@ export default function ScenarioPanel({ scenario, loading, onUpdate, onGenerate,
             max={100}
             step={5}
             value={objectiveSlider}
-            onChange={numberUpdate((value) => onUpdate({ healthWeight: 1 - value / 100 }))}
+            onChange={(event) => onUpdate({ objectiveWeight: Number(event.target.value) })}
           />
           <span className="range-value">
             {objectiveSlider === 0
-              ? 'Health focus'
+              ? 'Resilience focus'
               : objectiveSlider === 100
-              ? 'Economy focus'
-              : `${objectiveSlider}% economy tilt`}
+              ? 'Disruption focus'
+              : `${objectiveSlider}% disruption tilt`}
           </span>
         </div>
       </div>

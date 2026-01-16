@@ -6,15 +6,16 @@ import OutcomeCharts from './components/OutcomeCharts'
 import PlanTimeline from './components/PlanTimeline'
 import ZoneHeatmap from './components/ZoneHeatmap'
 import { fetchPlan, fetchWhatIf } from './api'
+import { mockPlan, mockWhatIf } from './mockPlan'
 import type { PlanResult, ScenarioConfig } from './types/api'
 
 const defaultScenario: ScenarioConfig = {
   region: 'SF Demo',
   horizonDays: 21,
-  initialCases: 80,
-  spread: 1.5,
-  compliance: 0.7,
-  healthWeight: 0.75,
+  initialEvents: 80,
+  intensity: 60,
+  compliance: 76,
+  objectiveWeight: 30,
   seed: 1337,
 }
 
@@ -24,6 +25,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [whatIfLoading, setWhatIfLoading] = useState(false)
   const [whatIfDelay, setWhatIfDelay] = useState(0)
+  const [offlineMode, setOfflineMode] = useState(false)
 
   const runPlan = async (payload: ScenarioConfig) => {
     setLoading(true)
@@ -31,8 +33,13 @@ function App() {
       const result = await fetchPlan(payload)
       setPlanResult(result)
       setScenario(result.config)
+      setOfflineMode(false)
     } catch (error) {
       console.error('Plan request failed', error)
+      setOfflineMode(true)
+      const fallback = mockPlan(payload)
+      setPlanResult(fallback)
+      setScenario(fallback.config)
     } finally {
       setLoading(false)
     }
@@ -59,8 +66,12 @@ function App() {
     try {
       const next = await fetchWhatIf({ scenario: planResult.config, delayDays: whatIfDelay })
       setPlanResult(next)
+      setOfflineMode(false)
     } catch (error) {
       console.error('What-if failed', error)
+      setOfflineMode(true)
+      const fallback = mockWhatIf(planResult.config, whatIfDelay)
+      setPlanResult(fallback)
     } finally {
       setWhatIfLoading(false)
     }
@@ -72,9 +83,14 @@ function App() {
 
   return (
     <main>
+      {offlineMode && (
+        <div className="glass-panel" style={{ marginBottom: '1rem' }}>
+          <p style={{ margin: 0, color: 'var(--text-muted)' }}>Planner backend is unavailable; showing local mock data.</p>
+        </div>
+      )}
       <div className="page-heading">
-        <h1>Local Outbreak Planner</h1>
-        <p>Configure an outbreak scenario, generate a policy plan, and compare it to baseline/naive outcomes.</p>
+        <h1>Local Scenario Planner</h1>
+        <p>Configure a regional scenario, generate an action timeline, and compare impact across baselines and naive alternatives.</p>
       </div>
 
       <div className="columns">
@@ -89,7 +105,7 @@ function App() {
           <WhatIfPanel delayDays={whatIfDelay} loading={whatIfLoading} onChange={setWhatIfDelay} onSubmit={handleWhatIf} />
         </div>
         <div className="dashboard">
-          <KpiGrid deltas={planResult?.deltas ?? null} />
+          <KpiGrid deltas={planResult?.deltas ?? null} score={planResult?.score ?? null} />
           <OutcomeCharts
             baseline={planResult?.baseline ?? []}
             recommended={planResult?.recommended ?? []}
@@ -97,7 +113,7 @@ function App() {
           />
           <div className="columns" style={{ marginTop: '1rem' }}>
             <PlanTimeline timeline={planResult?.timeline ?? []} reasons={planResult?.reasons ?? []} />
-            <ZoneHeatmap zoneHeatmap={planResult?.zoneHeatmap ?? []} />
+            <ZoneHeatmap zoneHeat={planResult?.zoneHeat ?? []} />
           </div>
         </div>
       </div>

@@ -1,10 +1,13 @@
 # CruzHacksSim
 
-Wireframe MVP for the **Local Outbreak Planner** decision-engine demo tailored to CruzHacks. Built as a structured monorepo with:
+Wireframe MVP for the **Local Scenario Planner** decision engine demo that pairs a polished UI with a deterministic placeholder simulator.
 
-- **sim/** – deterministic placeholder simulator and planner logic.
-- **backend/** – FastAPI wrapper exposing `/api/*` routes.
-- **frontend/** – Vite + React + TypeScript experience with charts, timeline, heatmap, and what-if controls.
+```
+cruzhackssim/
+  frontend/  # Vite + React + TS experience
+  backend/   # FastAPI REST wrapper
+  sim/       # Pure Python simulator / planner
+```
 
 ## Running the backend
 
@@ -13,10 +16,10 @@ cd backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app:app --reload --port 8000
+uvicorn app.main:app --reload --port 8000
 ```
 
-CORS is enabled so the frontend can proxy requests to `http://localhost:8000/api/*`.
+CORS lets the frontend proxy `/api` calls to `http://localhost:8000`.
 
 ## Running the frontend
 
@@ -26,13 +29,13 @@ npm install
 npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-Vite automatically proxies `/api` to the backend, so no extra config is required locally.
+Vite proxies `/api` to the backend automatically.
 
 ## Running both together
 
-Start the backend first (`uvicorn ... --port 8000`), then launch the frontend dev server in another shell. The UI will hit `http://localhost:8000/api/plan` and `/api/whatif` through the proxy.
+Launch the backend first, then `npm run dev` in the frontend directory. The UI talks to `/api/plan` and `/api/whatif` via the proxy; offline demos fall back to a local mock generator.
 
 ## Notes
 
-- The simulation library is pure Python and deterministic: it accepts a seed plus scenario sliders and returns realistic-looking curves, timelines, deltas, and zone maps, but it is intentionally lightweight/placeholding.
-- This MVP is designed for polish over fidelity; the architecture keeps `sim/` isolated so a future GPU-scaled planner (e.g., the NVIDIA hackathon effort) can swap in a real simulator without touching the UI or REST layer.
+- `sim/` exposes a pure Python engine that consumes slider-driven scenarios plus a seed and returns consistent `PlanResult`s; the backend merely proxies to it.
+- This MVP prioritizes polish and structure, so the simulator can be swapped for a high-performance or GPU-scaled planner (such as for an NVIDIA hackathon build) without touching the UI or REST layer.

@@ -183,6 +183,11 @@ main {
   font-size: 0.85rem;
 }
 
+.score-card h3 {
+  font-size: 2rem;
+  color: var(--accent-strong);
+}
+
 .dashboard {
   flex: 1;
   display: flex;

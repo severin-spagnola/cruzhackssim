@@ -6,10 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from sim import mock_engine, models
 
-app = FastAPI(title='CruzHacksSim API', version='0.1')
+app = FastAPI(title='Local Scenario Planner API', version='0.1')
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=['http://localhost:5173', 'http://127.0.0.1:5173'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -30,7 +30,7 @@ async def health() -> dict[str, str]:
 
 @app.post('/api/plan', response_model=models.PlanResult)
 async def plan(config: models.ScenarioConfig) -> models.PlanResult:
-    cache_key = _cache_key('plan', config.dict())
+    cache_key = _cache_key('plan', config.model_dump())
     if cache_key in _CACHE:
         return _CACHE[cache_key]
     result = mock_engine.plan(config)
@@ -40,10 +40,7 @@ async def plan(config: models.ScenarioConfig) -> models.PlanResult:
 
 @app.post('/api/whatif', response_model=models.PlanResult)
 async def what_if(request: models.WhatIfRequest) -> models.PlanResult:
-    cache_key = _cache_key('whatif', {
-        'scenario': request.scenario.dict(),
-        'delayDays': request.delayDays,
-    })
+    cache_key = _cache_key('whatif', {'scenario': request.scenario.model_dump(), 'delayDays': request.delayDays})
     if cache_key in _CACHE:
         return _CACHE[cache_key]
     result = mock_engine.what_if(request.scenario, request.delayDays)

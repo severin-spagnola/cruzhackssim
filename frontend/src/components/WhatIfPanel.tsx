@@ -10,10 +10,10 @@ export default function WhatIfPanel({ delayDays, loading, onChange, onSubmit }: 
     <section className="glass-panel" aria-label="What-if analysis">
       <div className="panel-header">
         <h2>What-if</h2>
-        <span className="text-muted">Mask mandate delay</span>
+        <span className="text-muted">Delay protective guidance</span>
       </div>
       <div className="control-group">
-        <label htmlFor="delay">Delay mask mandate (days)</label>
+        <label htmlFor="delay">Delay first mitigation (days)</label>
         <input
           id="delay"
           type="range"

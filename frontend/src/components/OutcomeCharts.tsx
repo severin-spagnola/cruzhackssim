@@ -19,9 +19,9 @@ type Props = {
 type MetricKey = keyof SimPoint
 
 const chartInfos: { key: MetricKey; label: string; suffix: string }[] = [
-  { key: 'infections', label: 'Active infections', suffix: '' },
-  { key: 'hospitalLoad', label: 'Hospital load', suffix: ' beds' },
-  { key: 'econIndex', label: 'Economic activity index', suffix: '' },
+  { key: 'events', label: 'Risk events', suffix: '' },
+  { key: 'capacityLoad', label: 'Capacity load', suffix: '' },
+  { key: 'economicIndex', label: 'Impact index', suffix: '' },
 ]
 
 const makeChartData = (metric: MetricKey, baseline: SimPoint[], recommended: SimPoint[], naive: SimPoint[]) =>

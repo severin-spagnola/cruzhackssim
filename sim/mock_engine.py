@@ -1,124 +1,107 @@
 from __future__ import annotations
 
-import math
 import random
 from typing import List
 
 from . import models
 
 _BASE_ACTIONS = [
-    (0, 'Citywide', 'Mask mandate', 'Enforce masks in all indoor public spaces and transit.', ['mask']),
-    (3, 'District', 'Targeted restrictions', 'Limit gatherings in high-transmission zones and boost testing.', ['targeted']),
-    (7, 'Transit', 'Transit capacity shift', 'Cap transit occupancy at 60% and expand outdoor routes.', ['transit']),
-    (14, 'Statewide', 'Conditional easing', 'Easing only if hospital load stays below threshold.', ['easing']),
+    (0, 'Citywide', 'Activate protective guidance', ['Guidance', 'Visibility']),
+    (3, 'District', 'Focus on high-stress nodes', ['Targeted support', 'Testing']),
+    (7, 'Network', 'Adjust mobility and services', ['Transit shift', 'Spacing rules']),
+    (14, 'System', 'Phase in conditional easing', ['Review metrics', 'Pulse surveys']),
 ]
 
+_ZONE_NAMES = ['Zone A', 'Zone B', 'Zone C', 'Zone D', 'Zone E', 'Zone F', 'Zone G', 'Zone H', 'Zone I']
 
-def _clamped(value: float, minimum: float, maximum: float) -> float:
+
+def _seeded_random(seed: int) -> random.Random:
+    return random.Random(seed)
+
+
+def _clamp(value: float, minimum: float, maximum: float) -> float:
     return max(minimum, min(maximum, value))
 
 
 def _build_sim_points(
     config: models.ScenarioConfig,
-    peak_multiplier: float,
-    rate_offset: float,
-    compliance_offset: float,
-    noise_seed: int,
+    compliance_boost: int,
+    intensity_factor: float,
     econ_bias: float,
+    noise_seed: int,
 ) -> List[models.SimPoint]:
-    rng = random.Random(config.seed + noise_seed)
-    compliance = _clamped(config.compliance + compliance_offset, 0.3, 0.95)
-    center = config.horizonDays / 2
-    base_peak = config.initialCases * (1 + config.spread * 6)
-    peak = base_peak * peak_multiplier
-    rate = 0.25 + config.spread * 0.02 + rate_offset - compliance * 0.01
-
+    seed = config.seed + noise_seed
+    rng = _seeded_random(seed)
+    compliance = int(_clamp(config.compliance + compliance_boost, 0, 100))
+    base_events = config.initialEvents * (1 + config.intensity / 120)
     points: List[models.SimPoint] = []
     for day in range(config.horizonDays):
-        logistic = peak / (1 + math.exp(-rate * (day - center)))
-        noise = 1 + (rng.random() - 0.5) * 0.08
-        infections = max(config.initialCases, logistic * noise)
-        hospital_load = infections * (0.08 + (1 - compliance) * 0.05 + config.healthWeight * 0.02) + day * 1.5
-        econ_base = 96 - infections / (peak + config.initialCases) * 10 - day * (1 - econ_bias) * 0.35
-        econ_index = _clamped(econ_base + config.healthWeight * 2 + compliance * 5, 48, 100)
+        horizon_ratio = day / max(1, config.horizonDays - 1)
+        noise = 1 + (rng.random() - 0.5) * 0.12
+        events = max(
+            config.initialEvents,
+            base_events * (1 + intensity_factor * horizon_ratio) * (1 - compliance / 200) * noise,
+        )
+        capacity_load = events * (0.09 + (100 - compliance) * 0.005) + day * 1.2
+        econ_index = _clamp(98 - events / (base_events + 5) * 8 - horizon_ratio * econ_bias, 42, 100)
         points.append(
             models.SimPoint(
                 day=day,
-                infections=round(infections, 1),
-                hospitalLoad=round(hospital_load, 1),
-                econIndex=round(econ_index, 1),
-            ),
+                events=int(round(events)),
+                capacityLoad=round(capacity_load, 1),
+                economicIndex=round(econ_index, 1),
+            )
         )
     return points
 
 
 def _build_timeline(config: models.ScenarioConfig) -> List[models.PlanAction]:
     actions: List[models.PlanAction] = []
-    for day, scope, title, description, tags in _BASE_ACTIONS:
+    for day, scope, title, effects in _BASE_ACTIONS:
         if day <= config.horizonDays:
-            actions.append(
-                models.PlanAction(
-                    day=day,
-                    scope=scope,
-                    title=title,
-                    description=f"{description} for the {config.region} footprint.",
-                    tags=tags,
-                ),
-            )
+            actions.append(models.PlanAction(day=day, scope=scope, title=title, effects=effects))
     return actions
 
 
-def _build_zone_heatmap(config: models.ScenarioConfig, delay_days: int) -> List[float]:
-    rng = random.Random(config.seed + delay_days * 13)
-    base = 0.35 + (config.spread - 1.0) * 0.15
-    adjustment = delay_days * 0.03
-    zones: List[float] = []
-    for idx in range(9):
-        noise = rng.random() * 0.25
-        value = _clamped(base + adjustment + noise + (idx / 20), 0, 1)
-        zones.append(round(value, 2))
-    return zones
+def _build_zone_heat(config: models.ScenarioConfig, delay_days: int) -> List[models.ZoneHeat]:
+    rng = _seeded_random(config.seed + delay_days * 21)
+    base = 0.25 + config.intensity / 200 + delay_days * 0.02
+    heat: List[models.ZoneHeat] = []
+    for zone in _ZONE_NAMES:
+        noise = rng.random() * 0.2
+        value = _clamp(base + noise + (ord(zone[0]) % 5) * 0.01, 0, 1)
+        heat.append(models.ZoneHeat(zone=zone, value=round(value, 2)))
+    return heat
 
 
-def _count_over_capacity(points: List[models.SimPoint], threshold: float = 165.0) -> int:
-    return sum(1 for point in points if point.hospitalLoad > threshold)
+def _sum_events(points: List[models.SimPoint]) -> int:
+    return sum(point.events for point in points)
 
 
-def _summed_infections(points: List[models.SimPoint]) -> float:
-    return sum(point.infections for point in points)
+def _count_overload(points: List[models.SimPoint], threshold: float = 160.0) -> int:
+    return sum(1 for point in points if point.capacityLoad > threshold)
 
 
-def plan_result(config: models.ScenarioConfig, delay_days: int = 0) -> models.PlanResult:
-    baseline = _build_sim_points(config, 1.05, 0.05, 0.0, 5, config.healthWeight)
-    recommended = _build_sim_points(
-        config,
-        0.8,
-        -0.03,
-        -delay_days * 0.02,
-        11,
-        config.healthWeight,
-    )
-    naive = _build_sim_points(config, 1.2, 0.08, -0.25, 17, 0.4)
+def _build_result(config: models.ScenarioConfig, delay_days: int) -> models.PlanResult:
+    baseline = _build_sim_points(config, 0, 0.7, 40, 7)
+    recommended = _build_sim_points(config, 6, 0.4, 30, 13 - delay_days)
+    naive = _build_sim_points(config, -12, 1.0, 60, 19)
 
-    infections_delta = max(0, int(_summed_infections(baseline) - _summed_infections(recommended)))
-    deaths_delta = max(0, int(infections_delta * 0.014 + 0.5))
-    econ_delta = round(max(0, _summed_infections(naive) - _summed_infections(recommended)) * 0.001, 1)
-    hosp_delta = max(0, _count_over_capacity(naive) - _count_over_capacity(recommended))
+    events_avoided = max(0, _sum_events(baseline) - _sum_events(recommended))
+    severe_avoided = max(0, int(events_avoided * 0.015))
+    cost_mitigated = round(max(0, _sum_events(naive) - _sum_events(recommended)) * 0.001, 1)
+    overload_days = max(0, _count_overload(naive) - _count_overload(recommended))
 
-    deltas = models.PlanDeltas(
-        infectionsAvoided=infections_delta,
-        deathsAvoided=deaths_delta,
-        econLossMitigatedM=econ_delta,
-        hospOverCapDaysAvoided=hosp_delta,
-    )
+    score = _clamp(64 + (config.compliance - delay_days * 2) * 0.3 - config.intensity * 0.1 + config.objectiveWeight * 0.15, 45, 100)
 
     reasons = [
-        'Early mask mandate keeps transmission predictable across zones.',
-        f'{config.region} timeline balances health focus ({int(config.healthWeight * 100)}%) with essential commerce.',
-        'Phased easing depends on measurable hospital slack to avoid reactive shutdowns.',
+        'Early activation keeps pressure predictable and schedules capacity.',
+        f'{config.region} mix blends resilience ({config.objectiveWeight}%) with workflow continuity.',
+        'Phase-based easing waits until measurable slack appears before relaxing rules.',
     ]
-    if delay_days:
-        reasons.append(f'Delaying the mask mandate by {delay_days} day{"s" if delay_days != 1 else ""} increases peak pressure.')
+    if delay_days > 0:
+        plural = '' if delay_days == 1 else 's'
+        reasons.append(f'Delayed protective guidance by {delay_days} day{plural}, lifting peak stress.')
 
     return models.PlanResult(
         baseline=baseline,
@@ -126,16 +109,22 @@ def plan_result(config: models.ScenarioConfig, delay_days: int = 0) -> models.Pl
         naive=naive,
         timeline=_build_timeline(config),
         reasons=reasons,
-        zoneHeatmap=_build_zone_heatmap(config, delay_days),
-        deltas=deltas,
+        zoneHeat=_build_zone_heat(config, delay_days),
+        deltas=models.PlanDeltas(
+            eventsAvoided=events_avoided,
+            severeAvoided=severe_avoided,
+            costMitigatedM=cost_mitigated,
+            overloadDaysAvoided=overload_days,
+        ),
+        score=float(round(score, 1)),
         config=config,
         whatifDelay=delay_days or None,
     )
 
 
 def plan(config: models.ScenarioConfig) -> models.PlanResult:
-    return plan_result(config, delay_days=0)
+    return _build_result(config, 0)
 
 
 def what_if(config: models.ScenarioConfig, delay_days: int) -> models.PlanResult:
-    return plan_result(config, delay_days=delay_days)
+    return _build_result(config, delay_days)

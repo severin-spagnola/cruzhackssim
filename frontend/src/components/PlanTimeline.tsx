@@ -23,11 +23,10 @@ export default function PlanTimeline({ timeline, reasons }: Props) {
               <span>{action.scope}</span>
             </div>
             <h3>{action.title}</h3>
-            <p>{action.description}</p>
             <div className="button-row" style={{ marginTop: '0.75rem' }}>
-              {action.tags.map((tag) => (
-                <span key={tag} className="pill">
-                  {tag}
+              {action.effects.map((effect) => (
+                <span key={`${action.day}-${effect}`} className="pill">
+                  {effect}
                 </span>
               ))}
             </div>
