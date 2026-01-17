@@ -1,0 +1,484 @@
+{
+  "baseline": [
+    {
+      "day": 0,
+      "events": 80,
+      "capacityLoad": 16.8,
+      "economicIndex": 92.9
+    },
+    {
+      "day": 1,
+      "events": 80,
+      "capacityLoad": 18.0,
+      "economicIndex": 90.9
+    },
+    {
+      "day": 2,
+      "events": 80,
+      "capacityLoad": 19.2,
+      "economicIndex": 88.9
+    },
+    {
+      "day": 3,
+      "events": 83,
+      "capacityLoad": 21.0,
+      "economicIndex": 86.7
+    },
+    {
+      "day": 4,
+      "events": 82,
+      "capacityLoad": 22.0,
+      "economicIndex": 84.8
+    },
+    {
+      "day": 5,
+      "events": 85,
+      "capacityLoad": 23.8,
+      "economicIndex": 82.6
+    },
+    {
+      "day": 6,
+      "events": 94,
+      "capacityLoad": 27.0,
+      "economicIndex": 80.0
+    },
+    {
+      "day": 7,
+      "events": 94,
+      "capacityLoad": 28.0,
+      "economicIndex": 78.0
+    },
+    {
+      "day": 8,
+      "events": 92,
+      "capacityLoad": 28.9,
+      "economicIndex": 76.1
+    },
+    {
+      "day": 9,
+      "events": 99,
+      "capacityLoad": 31.6,
+      "economicIndex": 73.7
+    },
+    {
+      "day": 10,
+      "events": 99,
+      "capacityLoad": 32.9,
+      "economicIndex": 71.6
+    },
+    {
+      "day": 11,
+      "events": 106,
+      "capacityLoad": 35.5,
+      "economicIndex": 69.2
+    },
+    {
+      "day": 12,
+      "events": 111,
+      "capacityLoad": 37.7,
+      "economicIndex": 66.9
+    },
+    {
+      "day": 13,
+      "events": 112,
+      "capacityLoad": 39.1,
+      "economicIndex": 64.8
+    },
+    {
+      "day": 14,
+      "events": 108,
+      "capacityLoad": 39.4,
+      "economicIndex": 63.1
+    },
+    {
+      "day": 15,
+      "events": 108,
+      "capacityLoad": 40.8,
+      "economicIndex": 61.1
+    },
+    {
+      "day": 16,
+      "events": 111,
+      "capacityLoad": 42.5,
+      "economicIndex": 58.9
+    },
+    {
+      "day": 17,
+      "events": 125,
+      "capacityLoad": 46.7,
+      "economicIndex": 56.0
+    },
+    {
+      "day": 18,
+      "events": 128,
+      "capacityLoad": 48.4,
+      "economicIndex": 53.8
+    },
+    {
+      "day": 19,
+      "events": 121,
+      "capacityLoad": 48.1,
+      "economicIndex": 52.3
+    },
+    {
+      "day": 20,
+      "events": 129,
+      "capacityLoad": 51.1,
+      "economicIndex": 49.7
+    }
+  ],
+  "recommended": [
+    {
+      "day": 0,
+      "events": 80,
+      "capacityLoad": 14.4,
+      "economicIndex": 92.9
+    },
+    {
+      "day": 1,
+      "events": 80,
+      "capacityLoad": 15.6,
+      "economicIndex": 91.4
+    },
+    {
+      "day": 2,
+      "events": 80,
+      "capacityLoad": 16.8,
+      "economicIndex": 89.9
+    },
+    {
+      "day": 3,
+      "events": 80,
+      "capacityLoad": 18.0,
+      "economicIndex": 88.4
+    },
+    {
+      "day": 4,
+      "events": 80,
+      "capacityLoad": 19.2,
+      "economicIndex": 86.9
+    },
+    {
+      "day": 5,
+      "events": 80,
+      "capacityLoad": 20.4,
+      "economicIndex": 85.4
+    },
+    {
+      "day": 6,
+      "events": 80,
+      "capacityLoad": 21.6,
+      "economicIndex": 83.9
+    },
+    {
+      "day": 7,
+      "events": 83,
+      "capacityLoad": 23.3,
+      "economicIndex": 82.2
+    },
+    {
+      "day": 8,
+      "events": 80,
+      "capacityLoad": 24.0,
+      "economicIndex": 80.9
+    },
+    {
+      "day": 9,
+      "events": 86,
+      "capacityLoad": 26.3,
+      "economicIndex": 79.0
+    },
+    {
+      "day": 10,
+      "events": 86,
+      "capacityLoad": 27.6,
+      "economicIndex": 77.5
+    },
+    {
+      "day": 11,
+      "events": 81,
+      "capacityLoad": 27.8,
+      "economicIndex": 76.3
+    },
+    {
+      "day": 12,
+      "events": 89,
+      "capacityLoad": 30.5,
+      "economicIndex": 74.3
+    },
+    {
+      "day": 13,
+      "events": 87,
+      "capacityLoad": 31.3,
+      "economicIndex": 72.9
+    },
+    {
+      "day": 14,
+      "events": 93,
+      "capacityLoad": 33.5,
+      "economicIndex": 71.1
+    },
+    {
+      "day": 15,
+      "events": 88,
+      "capacityLoad": 33.8,
+      "economicIndex": 69.9
+    },
+    {
+      "day": 16,
+      "events": 91,
+      "capacityLoad": 35.5,
+      "economicIndex": 68.2
+    },
+    {
+      "day": 17,
+      "events": 99,
+      "capacityLoad": 38.2,
+      "economicIndex": 66.2
+    },
+    {
+      "day": 18,
+      "events": 97,
+      "capacityLoad": 39.0,
+      "economicIndex": 64.8
+    },
+    {
+      "day": 19,
+      "events": 103,
+      "capacityLoad": 41.4,
+      "economicIndex": 62.9
+    },
+    {
+      "day": 20,
+      "events": 93,
+      "capacityLoad": 40.8,
+      "economicIndex": 62.0
+    }
+  ],
+  "naive": [
+    {
+      "day": 0,
+      "events": 80,
+      "capacityLoad": 21.6,
+      "economicIndex": 92.9
+    },
+    {
+      "day": 1,
+      "events": 87,
+      "capacityLoad": 24.8,
+      "economicIndex": 89.4
+    },
+    {
+      "day": 2,
+      "events": 95,
+      "capacityLoad": 28.0,
+      "economicIndex": 85.9
+    },
+    {
+      "day": 3,
+      "events": 97,
+      "capacityLoad": 29.7,
+      "economicIndex": 82.8
+    },
+    {
+      "day": 4,
+      "events": 100,
+      "capacityLoad": 31.8,
+      "economicIndex": 79.6
+    },
+    {
+      "day": 5,
+      "events": 108,
+      "capacityLoad": 35.1,
+      "economicIndex": 76.1
+    },
+    {
+      "day": 6,
+      "events": 110,
+      "capacityLoad": 36.9,
+      "economicIndex": 73.0
+    },
+    {
+      "day": 7,
+      "events": 116,
+      "capacityLoad": 39.6,
+      "economicIndex": 69.6
+    },
+    {
+      "day": 8,
+      "events": 110,
+      "capacityLoad": 39.2,
+      "economicIndex": 67.0
+    },
+    {
+      "day": 9,
+      "events": 116,
+      "capacityLoad": 42.1,
+      "economicIndex": 63.6
+    },
+    {
+      "day": 10,
+      "events": 115,
+      "capacityLoad": 43.1,
+      "economicIndex": 60.6
+    },
+    {
+      "day": 11,
+      "events": 127,
+      "capacityLoad": 47.5,
+      "economicIndex": 56.9
+    },
+    {
+      "day": 12,
+      "events": 137,
+      "capacityLoad": 51.3,
+      "economicIndex": 53.2
+    },
+    {
+      "day": 13,
+      "events": 130,
+      "capacityLoad": 50.7,
+      "economicIndex": 50.7
+    },
+    {
+      "day": 14,
+      "events": 139,
+      "capacityLoad": 54.4,
+      "economicIndex": 47.1
+    },
+    {
+      "day": 15,
+      "events": 140,
+      "capacityLoad": 55.8,
+      "economicIndex": 44.0
+    },
+    {
+      "day": 16,
+      "events": 141,
+      "capacityLoad": 57.4,
+      "economicIndex": 42.0
+    },
+    {
+      "day": 17,
+      "events": 153,
+      "capacityLoad": 61.8,
+      "economicIndex": 42.0
+    },
+    {
+      "day": 18,
+      "events": 159,
+      "capacityLoad": 64.5,
+      "economicIndex": 42.0
+    },
+    {
+      "day": 19,
+      "events": 167,
+      "capacityLoad": 68.0,
+      "economicIndex": 42.0
+    },
+    {
+      "day": 20,
+      "events": 164,
+      "capacityLoad": 68.4,
+      "economicIndex": 42.0
+    }
+  ],
+  "timeline": [
+    {
+      "day": 0,
+      "scope": "Citywide",
+      "title": "Activate protective guidance",
+      "effects": [
+        "Guidance",
+        "Visibility"
+      ]
+    },
+    {
+      "day": 3,
+      "scope": "District",
+      "title": "Focus on high-stress nodes",
+      "effects": [
+        "Targeted support",
+        "Testing"
+      ]
+    },
+    {
+      "day": 7,
+      "scope": "Network",
+      "title": "Adjust mobility and services",
+      "effects": [
+        "Transit shift",
+        "Spacing rules"
+      ]
+    },
+    {
+      "day": 14,
+      "scope": "System",
+      "title": "Phase in conditional easing",
+      "effects": [
+        "Review metrics",
+        "Pulse surveys"
+      ]
+    }
+  ],
+  "reasons": [
+    "Early activation keeps pressure predictable and schedules capacity.",
+    "SF Demo mix blends resilience (30%) with workflow continuity.",
+    "Phase-based easing waits until measurable slack appears before relaxing rules."
+  ],
+  "zoneHeat": [
+    {
+      "zone": "Zone A",
+      "value": 0.67
+    },
+    {
+      "zone": "Zone B",
+      "value": 0.66
+    },
+    {
+      "zone": "Zone C",
+      "value": 0.62
+    },
+    {
+      "zone": "Zone D",
+      "value": 0.67
+    },
+    {
+      "zone": "Zone E",
+      "value": 0.58
+    },
+    {
+      "zone": "Zone F",
+      "value": 0.71
+    },
+    {
+      "zone": "Zone G",
+      "value": 0.63
+    },
+    {
+      "zone": "Zone H",
+      "value": 0.71
+    },
+    {
+      "zone": "Zone I",
+      "value": 0.73
+    }
+  ],
+  "deltas": {
+    "eventsAvoided": 311,
+    "severeAvoided": 4,
+    "costMitigatedM": 0.8,
+    "overloadDaysAvoided": 0
+  },
+  "score": 85.3,
+  "config": {
+    "region": "SF Demo",
+    "horizonDays": 21,
+    "initialEvents": 80,
+    "intensity": 60,
+    "compliance": 76,
+    "objectiveWeight": 30,
+    "seed": 1337
+  },
+  "whatifDelay": null
+}

@@ -21,6 +21,15 @@ uvicorn app.main:app --reload --port 8000
 
 CORS lets the frontend proxy `/api` calls to `http://localhost:8000`.
 
+## Backend tests
+
+```bash
+cd backend
+pytest
+```
+
+`pytest` exercises `/api/plan`, `/api/whatif`, and validates the golden snapshot in `backend/tests/golden_plan_result.json`. The golden file is treated as a structural contract (schema shape only), so small simulator tuning won't break the test unless fields are added/removed.
+
 ## Running the frontend
 
 ```bash
